@@ -41,21 +41,20 @@ set -o pipefail
 
 VCPKGDIR=~/vcpkg
 
-mumble_deps='qt5-base[mysqlplugin],
-            qt5-base[postgresqlplugin],
-            qt5-svg,
-            qt5-tools,
-            qt5-translations,
-            boost-accumulators,
-            opus
-            poco,
-            libvorbis,
-            libogg,
-            libflac,
-            libsndfile,
-            protobuf,
-            zlib,
-            zeroc-ice-mumble'
+mumble_deps=("qt5-base[mysqlplugin,postgresqlplugin]"
+            "qt5-svg"
+            "qt5-tools"
+            "qt5-translations"
+            "boost-accumulators"
+            "opus"
+            "poco"
+            "libvorbis"
+            "libogg"
+            "libflac"
+            "libsndfile"
+            "protobuf"
+            "zlib"
+            "zeroc-ice-mumble")
 
 # Determine vcpkg triplet from OS https://github.com/Microsoft/vcpkg/blob/master/docs/users/triplets.md
 # Available triplets can be printed with `vcpkg help triplet`
@@ -99,10 +98,8 @@ if [ -d "$VCPKGDIR" ]
                     ./vcpkg install mdnsresponder icu --triplet $triplet
                     ./vcpkg install boost-optional:$xcompile_triplet --clean-after-build
             fi
-            for dep in ${mumble_deps//,/ }
-            do
-                ./vcpkg install $dep:$triplet --clean-after-build
-            done
+
+            ./vcpkg install ${mumble_deps[@]} --clean-after-build
         fi
 else
     echo "Failed to retrieve the 'vcpkg' repository! Aborting..."

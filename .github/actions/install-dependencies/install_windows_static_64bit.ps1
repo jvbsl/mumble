@@ -7,17 +7,6 @@
 # VM before we attempt to build. If the environment archive is already present,
 # this script will just extract it.
 #
-# Below is a list of configuration variables used from environment.
-#
-#  MUMBLE_ENVIRONMENT_STORE   - Path to the folder the build environment is stored in
-#                               (e.g. C:/MumbleBuild).
-#  MUMBLE_ENVIRONMENT_SOURCE  - Build environment web source folder URL
-#                               (e.g. https://dl.mumble.info/build/vcpkg/windows-static-1.4.x~2021-04-26~7da4529f.x64.7z).
-#  MUMBLE_ENVIRONMENT_VERSION - Full build environment version
-#                               (e.g. windows-static-1.4.x~2021-04-26~7da4529f.x64).
-#                               Must match .7z and extracted folder name.
-#  MUMBLE_SOURCE_REPOSITORY   - Path to the cloned repository.
-#
 
 # Always quit on encountered errors
 $ErrorActionPreference = 'Stop'
@@ -84,31 +73,14 @@ function Download {
 $TEMP_DIR = [System.IO.Path]::GetTempPath()
 Set-Location -Path $TEMP_DIR
 
-$SOURCE_DIR = $env:MUMBLE_SOURCE_REPOSITORY
+$SOURCE_DIR = $env:GITHUB_WORKSPACE
 
-$MUMBLE_ENVIRONMENT_STORE = $env:MUMBLE_ENVIRONMENT_STORE
-$MUMBLE_ENVIRONMENT_VERSION = $env:MUMBLE_ENVIRONMENT_VERSION
-
-if (-Not (Test-Path $MUMBLE_ENVIRONMENT_STORE)) {
-	New-Item $MUMBLE_ENVIRONMENT_STORE -ItemType Directory | Out-Null
-}
-
-if (-Not (Test-Path (Join-Path $MUMBLE_ENVIRONMENT_STORE $MUMBLE_ENVIRONMENT_VERSION))) {
-	Write-Host "Environment not cached. Downloading..."
-
-	$env_url = "$env:MUMBLE_ENVIRONMENT_SOURCE/$MUMBLE_ENVIRONMENT_VERSION.7z"
-	$env_7z = Join-Path $MUMBLE_ENVIRONMENT_STORE "$MUMBLE_ENVIRONMENT_VERSION.7z";
-
-	Download -source "$env_url" -destination "$env_7z"
-
-	Write-Host "Extracting build environment to $MUMBLE_ENVIRONMENT_STORE..."
-	Invoke-Command 7z x $env_7z -o"$MUMBLE_ENVIRONMENT_STORE"
-}
 
 Write-Host "Downloading ASIO SDK..."
 
 Download -source "https://dl.mumble.info/build/extra/asio_sdk.zip" -destination "asio_sdk.zip"
 Invoke-Command 7z x "asio_sdk.zip"
+dir ./asio*
 Move-Item -Path "asiosdk_2.3.3_2019-06-14" -Destination "$SOURCE_DIR/3rdparty/asio"
 
 
@@ -124,6 +96,7 @@ Write-Host "Downloading WixSharp..."
 Download -source "https://github.com/oleg-shilo/wixsharp/releases/download/v1.19.0.0/WixSharp.1.19.0.0.7z" -destination "WixSharp.7z"
 Write-Host "Exracting WixSharp to C:/WixSharp..."
 Invoke-Command 7z x "WixSharp.7z" "-oC:/WixSharp"
+Add-Content $env:GITHUB_PATH "C:/WixSharp"
 
 choco install vswhere
 

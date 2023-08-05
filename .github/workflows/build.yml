@@ -3,11 +3,11 @@ name: Build
 on: [push, pull_request]
 
 env:
+  VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite'
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
-  CMAKE_OPTIONS: |
-      -Dtests=ON -Dsymbols=ON -Ddisplay-install-paths=ON
-  MUMBLE_ENVIRONMENT_SOURCE: 'https://dl.mumble.info/build/vcpkg/'
+  CMAKE_OPTIONS: -Dtests=ON -Dsymbols=ON -Ddisplay-install-paths=ON
+  VCPKG_COMMIT_ID: a28aae61c575c6b5b2318d3d2dd97de1e55dc049
 
 
 jobs:
@@ -46,15 +46,34 @@ jobs:
     strategy:
         fail-fast: false
         matrix:
-            os: [ubuntu-20.04, ubuntu-22.04]
-            type: [shared] # Currently the "static" build doesn't work for Linux systems
+            os: [ubuntu-20.04, ubuntu-22.04, windows-latest, macos-latest]
             arch: [64bit]
+            include:
+              - os: windows-latest
+                vcpkgBasePath: "C:/"
+                shellToUse: pwsh
+                type: static
+              - os: macos-latest
+                vcpkgBasePath: "/Users/runner/"
+                shellToUse: bash
+                type: shared
+              - os: ubuntu-20.04
+                vcpkgBasePath: "/opt/"
+                shellToUse: bash
+                type: shared
+              - os: ubuntu-22.04
+                vcpkgBasePath: "/opt/"
+                shellToUse: bash
+                type: shared # Currently the "static" build doesn't work for Linux systems
             
     runs-on: ${{ matrix.os }}
 
+    permissions:
+      packages: write
+
     steps:
     - name: Print diskspace
-      run: df -BM
+      run: df -h
       shell: bash
 
 
@@ -64,32 +83,54 @@ jobs:
           fetch-depth: 1
 
 
+
+    - uses: actions/cache@v3
+      with:
+          path: '${{ matrix.vcpkgBasePath }}vcpkg'
+          key: '${{ matrix.os }}_${{ matrix.arch }}_${{ env.VCPKG_COMMIT_ID }}'
+    - name: Setup vcpkg
+      uses: lukka/run-vcpkg@v11
+      id: runvcpkg
+      with:
+        vcpkgDirectory: '${{ matrix.vcpkgBasePath }}vcpkg'
+        vcpkgGitCommitId: '${{ env.VCPKG_COMMIT_ID }}'
+      if: matrix.os == 'windows-latest' || matrix.os == 'macos-latest'
     - name: Set environment variables
       run: $GITHUB_WORKSPACE/.github/workflows/set_environment_variables.sh "${{ matrix.os }}" "${{ matrix.type }}" "${{ matrix.arch }}" "${{ runner.workspace }}"
       shell: bash
 
 
-    - uses: actions/cache@v3
+    - uses: nuget/setup-nuget@v1
       with:
-          path: '${{ env.MUMBLE_BUILD_ENV_PATH }}'
-          key: ${{ env.MUMBLE_ENVIRONMENT_VERSION }}
-
-
+        nuget-version: '5.x'
+    - name: 'Setup NuGet Credentials'
+      shell: 'bash'
+      run: |
+        nuget sources add -source "https://nuget.pkg.github.com/jvbsl/index.json" -storepasswordincleartext -name "GitHub" -username "jvbsl" -password "${{ secrets.GITHUB_TOKEN }}"
+        nuget setapikey "${{ secrets.GITHUB_TOKEN }}" -source "https://nuget.pkg.github.com/jvbsl/index.json"
+      if: matrix.os == 'windows-latest' || matrix.os == 'macos-latest'
     - uses: ./.github/actions/install-dependencies
       with:
           type: ${{ matrix.type }}
           os: ${{ matrix.os }}
           arch: ${{ matrix.arch }}
-
-
+    - name: 'Run vcpkg'
+      run: |
+        ./scripts/vcpkg/get_mumble_dependencies${{ matrix.shellToUse == 'pwsh' && '.ps1' || '.sh' }}
+      if: matrix.os == 'windows-latest' || matrix.os == 'macos-latest'
+    - uses: ilammy/msvc-dev-cmd@v1.12.1
+      if: matrix.os == 'windows-latest'
     - name: Build
-      run: ./.github/workflows/build.sh
-      shell: bash
+      run: |
+          mkdir "${{ github.workspace }}/build"
+          cd "${{ github.workspace }}/build"
+          # Run cmake with all necessary options
+          cmake -G Ninja -S "${{ github.workspace }}" -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DBUILD_NUMBER=${{ env.MUMBLE_BUILD_NUMBER }} ${{ env.CMAKE_OPTIONS }} -DCMAKE_UNITY_BUILD=ON -Ddisplay-install-paths=ON ${{ env.ADDITIONAL_CMAKE_OPTIONS }} ${{ env.VCPKG_CMAKE_OPTIONS }}
+          # Actually build
+          cmake --build . --config ${{ env.BUILD_TYPE }}
       env:
           MUMBLE_BUILD_NUMBER: ${{ needs.fetch_build_number.outputs.build_number }}
-
     - name: Test
       working-directory: ${{ github.workspace }}/build
       shell: bash
-      run: QT_QPA_PLATFORM=offscreen ctest --output-on-failure -C $BUILD_TYPE
-
+      run: ctest --output-on-failure -C $BUILD_TYPE

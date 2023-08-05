@@ -4,9 +4,13 @@
 # Mumble source tree or at <https://www.mumble.info/LICENSE>.
 
 $profiledir = $Env:USERPROFILE 
-$vcpkgdir = $profiledir + "\vcpkg"
 
-$mumble_deps = "qt5-base[postgresqlplugin,mysqlplugin]",
+$vcpkgdir = $ENV:VCPKG_ROOT
+if (-not (Test-Path $vcpkgdir)) {
+    $vcpkgdir = $profiledir + "\vcpkg"
+}
+
+$mumble_deps = "qt5-base[mysqlplugin,postgresqlplugin]",
                "qt5-svg",
                "qt5-tools",
                "qt5-translations",
