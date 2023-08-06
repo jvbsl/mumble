@@ -112,6 +112,16 @@ jobs:
       run: |
         ./scripts/vcpkg/get_mumble_dependencies${{ matrix.shellToUse == 'pwsh' && '.ps1' || '.sh' }} --${{ matrix.type }}
       if: matrix.os == 'windows-latest' || matrix.os == 'macos-latest' || matrix.type == 'static'
+    - name: Upload error logs
+      uses: actions/upload-artifact@v3
+      if: failure()
+      with:
+        name: logs
+        path: |
+            /Users/runner/vcpkg/buildtrees/icu/make-build-fix-rpath-x64-osx-dynamic-dbg-err.log
+            /home/runner/vcpkg/buildtrees/icu/config-x64-linux-dbg-err.log
+            /home/runner/vcpkg/buildtrees/icu/config-x64-linux-dbg-config.log
+        if-no-files-found: warning
     - uses: ilammy/msvc-dev-cmd@v1.12.1
       if: matrix.os == 'windows-latest'
     - name: Build

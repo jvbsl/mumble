@@ -10,7 +10,7 @@ if (-not (Test-Path $vcpkgdir)) {
     $vcpkgdir = $profiledir + "\vcpkg"
 }
 
-if ($PSBoundParameters.ContainsKey('--shared')) {
+if ($args.Contains('--shared')) {
     $BUILD_TYPE_ADDITION="" # shared is default without anything added to the triplet
 } else {
     $BUILD_TYPE_ADDITION="-static-md" # Default to static
