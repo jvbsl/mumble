@@ -32,6 +32,14 @@ if ! has_option '--auto' "$@"
 	trap "printf '\n\n'; read -p 'ERROR encountered... Press Enter to exit'" ERR
 fi
 
+if ! has_option '--static' "$@"
+    then
+    BUILD_TYPE_ADDITION="-static"
+elif ! has_option '--shared' "$@"
+    then
+    BUILD_TYPE_ADDITION="" # shared is without anything added to the triplet
+fi
+
 # On failed command (error code) exit the whole script
 set -e
 # Treat using unset variables as errors
@@ -59,11 +67,20 @@ mumble_deps=("qt5-base[mysqlplugin,postgresqlplugin]"
 # Determine vcpkg triplet from OS https://github.com/Microsoft/vcpkg/blob/master/docs/users/triplets.md
 # Available triplets can be printed with `vcpkg help triplet`
 case "$OSTYPE" in
-    msys* ) triplet='x64-windows-static-md'
-        xcompile_triplet='x86-windows-static-md'
-    ;;
-    linux-gnu* ) triplet='x64-linux';;
-    darwin* ) triplet='x64-osx';;
+    msys* )
+        BUILD_TYPE_ADDITION="${BUILD_TYPE_ADDITION--static}" # Default to static for msys(Windows)
+        if [[ "$BUILD_TYPE_ADDITION" == "-static" ]]; then
+            BUILD_TYPE_ADDITION="$BUILD_TYPE_ADDITION-md" # Link dynamically to CRT
+        fi
+        triplet="x64-windows$BUILD_TYPE_ADDITION"
+        xcompile_triplet="x86-windows$BUILD_TYPE_ADDITION"
+        ;;
+    linux-gnu* )
+        triplet="x64-linux$BUILD_TYPE_ADDITION"
+        ;;
+    darwin* )
+        triplet="x64-osx$BUILD_TYPE_ADDITION"
+        ;;
     * ) echo "The OSTYPE is either not defined or unsupported. Aborting...";;
 esac
 

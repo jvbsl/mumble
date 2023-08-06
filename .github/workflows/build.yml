@@ -84,14 +84,14 @@ jobs:
     - uses: actions/cache@v3
       with:
           path: '${{ matrix.vcpkgBasePath }}vcpkg'
-          key: '${{ matrix.os }}_${{ matrix.arch }}_${{ env.VCPKG_COMMIT_ID }}'
+          key: '${{ matrix.os }}_${{ matrix.arch }}_${{ matrix.type }}_${{ env.VCPKG_COMMIT_ID }}'
     - name: Setup vcpkg
       uses: lukka/run-vcpkg@v11
       id: runvcpkg
       with:
         vcpkgDirectory: '${{ matrix.vcpkgBasePath }}vcpkg'
         vcpkgGitCommitId: '${{ env.VCPKG_COMMIT_ID }}'
-      if: matrix.os == 'windows-latest' || matrix.os == 'macos-latest'
+      if: matrix.os == 'windows-latest' || matrix.os == 'macos-latest' || matrix.type == 'static'
     - name: Set environment variables
       run: $GITHUB_WORKSPACE/.github/workflows/set_environment_variables.sh "${{ matrix.os }}" "${{ matrix.type }}" "${{ matrix.arch }}" "${{ runner.workspace }}"
       shell: bash
@@ -105,7 +105,7 @@ jobs:
       run: |
         nuget sources add -source "https://nuget.pkg.github.com/jvbsl/index.json" -storepasswordincleartext -name "GitHub" -username "jvbsl" -password "${{ secrets.GITHUB_TOKEN }}"
         nuget setapikey "${{ secrets.GITHUB_TOKEN }}" -source "https://nuget.pkg.github.com/jvbsl/index.json"
-      if: matrix.os == 'windows-latest' || matrix.os == 'macos-latest'
+      if: matrix.os == 'windows-latest' || matrix.os == 'macos-latest' || matrix.type == 'static'
     - uses: ./.github/actions/install-dependencies
       with:
           type: ${{ matrix.type }}
@@ -113,8 +113,8 @@ jobs:
           arch: ${{ matrix.arch }}
     - name: 'Run vcpkg'
       run: |
-        ./scripts/vcpkg/get_mumble_dependencies${{ matrix.shellToUse == 'pwsh' && '.ps1' || '.sh' }}
-      if: matrix.os == 'windows-latest' || matrix.os == 'macos-latest'
+        ./scripts/vcpkg/get_mumble_dependencies${{ matrix.shellToUse == 'pwsh' && '.ps1' || '.sh' }} --${{ matrix.type }}
+      if: matrix.os == 'windows-latest' || matrix.os == 'macos-latest' || matrix.type == 'static'
     - uses: ilammy/msvc-dev-cmd@v1.12.1
       if: matrix.os == 'windows-latest'
     - name: Build

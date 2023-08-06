@@ -10,6 +10,12 @@ if (-not (Test-Path $vcpkgdir)) {
     $vcpkgdir = $profiledir + "\vcpkg"
 }
 
+if ($PSBoundParameters.ContainsKey('--shared')) {
+    $BUILD_TYPE_ADDITION="" # shared is without anything added to the triplet
+} else {
+    $BUILD_TYPE_ADDITION="-static-md" # Default to static
+}
+
 $mumble_deps = "qt5-base[mysqlplugin,postgresqlplugin]",
                "qt5-svg",
                "qt5-tools",
@@ -52,10 +58,10 @@ $prevDir=pwd
 try {
 	Write-Host "Setting triplets for $Env:PROCESSOR_ARCHITECTURE"
 	if ($Env:PROCESSOR_ARCHITECTURE -eq "AMD64") {
-		$triplet = "x64-windows"
-		$xcompile_triplet = "x86-windows"
+		$triplet = "x64-windows$BUILD_TYPE_ADDITION"
+		$xcompile_triplet = "x86-windows$BUILD_TYPE_ADDITION"
 	} else {
-		$triplet = "x86-windows"
+		$triplet = "x86-windows$BUILD_TYPE_ADDITION"
 	}
 
 	Write-Host "Checking for $vcpkgdir..."
