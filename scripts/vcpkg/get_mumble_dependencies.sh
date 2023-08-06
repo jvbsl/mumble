@@ -32,10 +32,10 @@ if ! has_option '--auto' "$@"
 	trap "printf '\n\n'; read -p 'ERROR encountered... Press Enter to exit'" ERR
 fi
 
-if ! has_option '--static' "$@"
+if has_option '--static' "$@"
     then
     BUILD_TYPE_ADDITION="-static"
-elif ! has_option '--shared' "$@"
+elif has_option '--shared' "$@"
     then
     BUILD_TYPE_ADDITION="" # shared is without anything added to the triplet
 fi

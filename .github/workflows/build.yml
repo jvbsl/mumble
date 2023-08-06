@@ -56,9 +56,6 @@ jobs:
               - os: macos-latest
                 vcpkgBasePath: "/Users/runner/"
                 shellToUse: bash
-              - os: ubuntu-20.04
-                vcpkgBasePath: "/opt/"
-                shellToUse: bash
               - os: ubuntu-22.04
                 vcpkgBasePath: "/opt/"
                 shellToUse: bash
