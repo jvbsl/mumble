@@ -34,10 +34,10 @@ fi
 
 if has_option '--static' "$@"
     then
-    BUILD_TYPE_ADDITION="-static"
+    BUILD_TYPE_ADDITION="" # static is default without anything added to the triplet
 elif has_option '--shared' "$@"
     then
-    BUILD_TYPE_ADDITION="" # shared is without anything added to the triplet
+    BUILD_TYPE_ADDITION="-dynamic"
 fi
 
 # On failed command (error code) exit the whole script

@@ -65,10 +65,13 @@ fi
 
 if [[ "$build_type" == "static" ]]; then
 	ADDITIONAL_CMAKE_OPTIONS="$ADDITIONAL_CMAKE_OPTIONS -Dstatic=ON"
-	VCPKG_TARGET_TRIPLET="$VCPKG_TARGET_TRIPLET-static"
 	if [[ "$os" == "windows" ]]; then
-		VCPKG_TARGET_TRIPLET="$VCPKG_TARGET_TRIPLET-md"
+		VCPKG_TARGET_TRIPLET="$VCPKG_TARGET_TRIPLET-static-md"
 		ADDITIONAL_CMAKE_OPTIONS="$ADDITIONAL_CMAKE_OPTIONS -Dpackaging=ON"
+	fi
+else
+	if [[ "$os" != "windows" ]]; then
+		VCPKG_TARGET_TRIPLET="$VCPKG_TARGET_TRIPLET-dynamic"
 	fi
 fi
 
