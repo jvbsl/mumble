@@ -116,7 +116,7 @@ if [ -d "$VCPKGDIR" ]
                     ./vcpkg install boost-optional:$xcompile_triplet --clean-after-build
             fi
 
-            ./vcpkg install ${mumble_deps[@]} --clean-after-build
+            ./vcpkg install ${mumble_deps[@]} --triplet $triplet --clean-after-build
         fi
 else
     echo "Failed to retrieve the 'vcpkg' repository! Aborting..."
