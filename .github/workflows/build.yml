@@ -48,23 +48,20 @@ jobs:
         matrix:
             os: [ubuntu-20.04, ubuntu-22.04, windows-latest, macos-latest]
             arch: [64bit]
+            type: [shared, static]
             include:
               - os: windows-latest
                 vcpkgBasePath: "C:/"
                 shellToUse: pwsh
-                type: static
               - os: macos-latest
                 vcpkgBasePath: "/Users/runner/"
                 shellToUse: bash
-                type: shared
               - os: ubuntu-20.04
                 vcpkgBasePath: "/opt/"
                 shellToUse: bash
-                type: shared
               - os: ubuntu-22.04
                 vcpkgBasePath: "/opt/"
                 shellToUse: bash
-                type: shared # Currently the "static" build doesn't work for Linux systems
             
     runs-on: ${{ matrix.os }}
 
