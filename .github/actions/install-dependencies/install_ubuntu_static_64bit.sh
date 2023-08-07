@@ -30,6 +30,15 @@ sudo apt -y install \
 	libgl-dev \
 	autoconf \
 	autoconf-archive \
-	automake
+	automake \
+	libx11-xcb-dev \
+	libgl1-mesa-dev \
+	libxrender-dev \
+	libxi-dev \
+    libxkbcommon-dev \
+    libxkbcommon-x11-dev \
+    libxcb1-dev \
+    libx11-xcb-dev \
+    libxcb-glx0-dev
 
 

@@ -87,7 +87,7 @@ try {
 			vcpkg_install -package boost-optional -targetTriplet $xcompile_triplet -cleanAfterBuild
 		}
 
-		Write-Host "Beginning package install..."
+		Write-Host "Beginning package install($mumble_deps) $triplet..."
 
 		vcpkg_install -package $mumble_deps -targetTriplet $triplet -cleanAfterBuild
 	}
