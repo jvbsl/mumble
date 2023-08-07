@@ -47,7 +47,10 @@ set -u
 # For piped commands on command failure fail entire pipe instead of only the last command being significant
 set -o pipefail
 
-VCPKGDIR=~/vcpkg
+VCPKGDIR="$VCPKG_ROOT"
+if [[ ! -f "$VCPKGDIR" ]]; then
+    VCPKGDIR=~/vcpkg
+fi
 
 mumble_deps=("qt5-base[mysqlplugin,postgresqlplugin]"
             "qt5-svg"
