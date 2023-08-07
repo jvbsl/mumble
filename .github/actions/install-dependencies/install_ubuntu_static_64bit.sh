@@ -32,13 +32,18 @@ sudo apt -y install \
 	autoconf-archive \
 	automake \
 	libx11-xcb-dev \
-	libgl1-mesa-dev \
 	libxrender-dev \
-	libxi-dev \
-    libxkbcommon-dev \
-    libxkbcommon-x11-dev \
     libxcb1-dev \
-    libx11-xcb-dev \
-    libxcb-glx0-dev
-
-
+    libxcb-glx0-dev \
+    libxcb-render0-dev \
+    libxcb-shape0-dev \
+    libxcb-randr0-dev \
+    libxcb-xfixes0-dev \
+    libxcb-sync-dev \
+    libxcb-shm0-dev \
+    libfontconfig-dev \
+    libfreetype-dev \
+    libxext-dev \
+    libx11-dev \
+    libsm-dev \
+    libice-dev
