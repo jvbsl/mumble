@@ -119,9 +119,9 @@ jobs:
         name: logs
         path: |
             /Users/runner/vcpkg/buildtrees/icu/make-build-fix-rpath-x64-osx-dynamic-dbg-err.log
-            /home/runner/vcpkg/buildtrees/icu/config-x64-linux-dbg-err.log
-            /home/runner/vcpkg/buildtrees/icu/config-x64-linux-dbg-config.log
-            /home/runner/vcpkg/buildtrees/qt5-tools/package-install-x64-linux-dbg-err.log
+            /opt/vcpkg/buildtrees/icu/config-x64-linux-dbg-err.log
+            /opt/vcpkg/buildtrees/icu/config-x64-linux-dbg-config.log
+            /opt/vcpkg/buildtrees/qt5-tools/package-install-x64-linux-dbg-err.log
         if-no-files-found: warn
     - uses: ilammy/msvc-dev-cmd@v1.12.1
       if: matrix.os == 'windows-latest'
