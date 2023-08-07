@@ -27,6 +27,9 @@ sudo apt -y install \
 	mesa-common-dev \
 	libxrandr-dev \
 	libxxf86vm-dev \
-	libgl-dev
+	libgl-dev \
+	autoconf \
+	autoconf-archive \
+	automake
 
 
