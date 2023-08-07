@@ -48,7 +48,7 @@ set -u
 set -o pipefail
 
 VCPKGDIR="$VCPKG_ROOT"
-if [[ ! -f "$VCPKGDIR" ]]; then
+if [[ ! -d "$VCPKGDIR" ]]; then
     VCPKGDIR=~/vcpkg
 fi
 
