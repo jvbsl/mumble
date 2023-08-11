@@ -47,10 +47,13 @@ VCPKG_ROOT="$HOME/vcpkg"
 TEST_ENVIRONMENT_PROGRAM=""
 case "$os" in
 	"ubuntu")
-		echo "QT_QPA_PLATFORM=offscreen" >> "$GITHUB_ENV"
+        if [[ "$build_type" == "shared" ]]; then
+		    echo "QT_QPA_PLATFORM=offscreen" >> "$GITHUB_ENV"
+	    elif [[ "$build_type" == "static" ]]; then
+		    TEST_ENVIRONMENT_PROGRAM="xvfb-run --auto-servernum"
+		fi
 		VCPKG_TARGET_TRIPLET="linux"
 		VCPKG_ROOT="$GITHUB_WORKSPACE/vcpkg"
-		TEST_ENVIRONMENT_PROGRAM="xvfb-run --auto-servernum"
 		;;
 	"windows")
 		VCPKG_TARGET_TRIPLET="windows"
