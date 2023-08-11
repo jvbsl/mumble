@@ -118,11 +118,8 @@ if [ -d "$VCPKGDIR" ]
                     ./vcpkg install mdnsresponder icu --triplet $triplet
                     ./vcpkg install boost-optional:$xcompile_triplet --clean-after-build
             fi
-            for p in ${mumble_deps[@]}
-            do
-                ./vcpkg install $p --triplet $triplet --clean-after-build
-                df -h
-            done
+
+            ./vcpkg install ${mumble_deps[@]} --triplet $triplet --clean-after-build
         fi
 else
     echo "Failed to retrieve the 'vcpkg' repository! Aborting..."
