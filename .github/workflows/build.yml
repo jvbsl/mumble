@@ -51,13 +51,10 @@ jobs:
             type: [shared, static]
             include:
               - os: windows-latest
-                vcpkgBasePath: "C:/"
                 shellToUse: pwsh
               - os: macos-latest
-                vcpkgBasePath: "/Users/runner/"
                 shellToUse: bash
               - os: ubuntu-22.04
-                vcpkgBasePath: "/opt/"
                 shellToUse: bash
             
     runs-on: ${{ matrix.os }}
@@ -66,32 +63,36 @@ jobs:
       packages: write
 
     steps:
+
+    - name: Maximize build disk space
+      uses: easimon/maximize-build-space@v7
+      with:
+          remove-android: 'true'
+          remove-haskell: 'true'
+      if: matrix.os == 'ubuntu-22.04'
     - name: Print diskspace
       run: df -h
       shell: bash
-
 
     - uses: actions/checkout@v3
       with:
           submodules: 'recursive'
           fetch-depth: 1
-
-
-
+    - name: Set environment variables
+      run: $GITHUB_WORKSPACE/.github/workflows/set_environment_variables.sh "${{ matrix.os }}" "${{ matrix.type }}" "${{ matrix.arch }}" "${{ runner.workspace }}"
+      shell: bash
     - uses: actions/cache@v3
       with:
-          path: '${{ matrix.vcpkgBasePath }}vcpkg'
+          path: ${{ env.VCPKG_ROOT }}
           key: '${{ matrix.os }}_${{ matrix.arch }}_${{ matrix.type }}_${{ env.VCPKG_COMMIT_ID }}'
     - name: Setup vcpkg
       uses: lukka/run-vcpkg@v11
       id: runvcpkg
       with:
-        vcpkgDirectory: '${{ matrix.vcpkgBasePath }}vcpkg'
+        vcpkgDirectory: ${{ env.VCPKG_ROOT }}
         vcpkgGitCommitId: '${{ env.VCPKG_COMMIT_ID }}'
       if: matrix.os == 'windows-latest' || matrix.os == 'macos-latest' || matrix.type == 'static'
-    - name: Set environment variables
-      run: $GITHUB_WORKSPACE/.github/workflows/set_environment_variables.sh "${{ matrix.os }}" "${{ matrix.type }}" "${{ matrix.arch }}" "${{ runner.workspace }}"
-      shell: bash
+
 
 
     - uses: nuget/setup-nuget@v1
@@ -119,10 +120,17 @@ jobs:
         name: logs
         path: |
             /Users/runner/vcpkg/buildtrees/icu/make-build-fix-rpath-x64-osx-dynamic-dbg-err.log
-            /opt/vcpkg/buildtrees/icu/config-x64-linux-dbg-err.log
-            /opt/vcpkg/buildtrees/icu/config-x64-linux-dbg-config.log
-            /opt/vcpkg/buildtrees/qt5-tools/package-install-x64-linux-dbg-err.log
+            /home/runner/vcpkg/buildtrees/icu/config-x64-linux-dbg-err.log
+            /home/runner/vcpkg/buildtrees/icu/config-x64-linux-dbg-config.log
+            /home/runner/vcpkg/buildtrees/qt5-tools/package-install-x64-linux-dbg-err.log
+            /home/runner/vcpkg/buildtrees/qt5-tools/package-install-x64-linux-dbg-out.log
+            /home/runner/work/mumble/mumble/vcpkg/buildtrees/zeroc-ice-mumble/install-x64-linux-dbg-out.log
+            /home/runner/work/mumble/mumble/vcpkg/buildtrees/zeroc-ice-mumble/install-x64-linux-dbg-err.log
         if-no-files-found: warn
+    - name: Print diskspace
+      run: df -h
+      shell: bash
+      if: failure()
     - uses: ilammy/msvc-dev-cmd@v1.12.1
       if: matrix.os == 'windows-latest'
     - name: Build
@@ -139,3 +147,6 @@ jobs:
       working-directory: ${{ github.workspace }}/build
       shell: bash
       run: ctest --output-on-failure -C $BUILD_TYPE
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
+      if: failure()

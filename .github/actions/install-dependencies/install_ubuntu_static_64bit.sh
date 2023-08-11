@@ -46,4 +46,5 @@ sudo apt -y install \
     libxext-dev \
     libx11-dev \
     libsm-dev \
-    libice-dev
+    libice-dev \
+    libbluetooth-dev

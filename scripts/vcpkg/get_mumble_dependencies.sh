@@ -47,8 +47,8 @@ set -u
 # For piped commands on command failure fail entire pipe instead of only the last command being significant
 set -o pipefail
 
-VCPKGDIR="$VCPKG_ROOT"
-if [[ ! -d "$VCPKGDIR" ]]; then
+VCPKGDIR=$VCPKG_ROOT
+if [ ! -d $VCPKGDIR ]; then
     VCPKGDIR=~/vcpkg
 fi
 

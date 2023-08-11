@@ -43,14 +43,17 @@ esac
 
 
 VCPKG_TARGET_TRIPLET=""
+VCPKG_ROOT="$HOME/vcpkg"
 case "$os" in
 	"ubuntu")
 		echo "QT_QPA_PLATFORM=offscreen" >> "$GITHUB_ENV"
 		VCPKG_TARGET_TRIPLET="linux"
+		VCPKG_ROOT="$GITHUB_WORKSPACE/vcpkg"
 		;;
 	"windows")
 		VCPKG_TARGET_TRIPLET="windows"
 		ADDITIONAL_CMAKE_OPTIONS="$ADDITIONAL_CMAKE_OPTIONS -Dpackaging=ON"
+		VCPKG_ROOT="C:/vcpkg"
 		;;
 	"macos")
 		VCPKG_TARGET_TRIPLET="osx"
@@ -75,7 +78,7 @@ else
 	fi
 fi
 
-if [[ "$os" != "ubuntu" ]]; then
+if [[ "$os" != "ubuntu" || "$build_type" == "static" ]]; then
 	VCPKG_CMAKE_OPTIONS="$VCPKG_CMAKE_OPTIONS -DCMAKE_TOOLCHAIN_FILE='$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake' -DVCPKG_TARGET_TRIPLET='$VCPKG_TARGET_TRIPLET' -DIce_HOME='$VCPKG_ROOT/installed/$VCPKG_TARGET_TRIPLET'"
 fi
 
@@ -84,3 +87,4 @@ fi
 # set environment variables in a way that GitHub Actions understands and preserves
 echo "ADDITIONAL_CMAKE_OPTIONS=$ADDITIONAL_CMAKE_OPTIONS" >> "$GITHUB_ENV"
 echo "VCPKG_CMAKE_OPTIONS=$VCPKG_CMAKE_OPTIONS" >> "$GITHUB_ENV"
+echo "VCPKG_ROOT=$VCPKG_ROOT" >> "$GITHUB_ENV"
