@@ -47,4 +47,5 @@ sudo apt -y install \
     libx11-dev \
     libsm-dev \
     libice-dev \
-    libbluetooth-dev
+    libbluetooth-dev \
+    xvfb

@@ -146,7 +146,7 @@ jobs:
     - name: Test
       working-directory: ${{ github.workspace }}/build
       shell: bash
-      run: ctest --output-on-failure -C $BUILD_TYPE
+      run: $TEST_ENVIRONMENT_PROGRAM ctest --output-on-failure -C $BUILD_TYPE
     - name: Setup tmate session
       uses: mxschmitt/action-tmate@v3
       if: failure()
