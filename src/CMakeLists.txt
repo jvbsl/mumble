@@ -180,7 +180,7 @@ target_link_libraries(shared
 )
 
 if(WIN32)
-	target_link_libraries(shared PUBLIC qwave.lib Ws2_32.lib)
+	target_link_libraries(shared PUBLIC qwave.lib ws2_32.lib)
 elseif(APPLE)
 	find_library(LIB_CORESERVICES "CoreServices")
 	target_link_libraries(shared PUBLIC ${LIB_CORESERVICES})

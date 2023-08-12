@@ -133,7 +133,7 @@ if(WIN32)
 			dbghelp.lib
 			shlwapi.lib
 			rpcrt4.lib
-			Ws2_32.lib
+			ws2_32.lib
 	)
 
 	if(static AND TARGET Qt5::QWindowsIntegrationPlugin)
