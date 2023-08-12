@@ -120,6 +120,8 @@ jobs:
             /home/runner/vcpkg/buildtrees/qt5-tools/package-install-x64-linux-dbg-out.log
             /home/runner/work/mumble/mumble/vcpkg/buildtrees/zeroc-ice-mumble/install-x64-linux-dbg-out.log
             /home/runner/work/mumble/mumble/vcpkg/buildtrees/zeroc-ice-mumble/install-x64-linux-dbg-err.log
+            /Users/runner/vcpkg/buildtrees/zeroc-ice-mumble/install-x64-osx-dbg-out.log
+            /Users/runner/vcpkg/buildtrees/zeroc-ice-mumble/install-x64-osx-dbg-err.log
         if-no-files-found: warn
     - name: Print diskspace
       run: df -h
