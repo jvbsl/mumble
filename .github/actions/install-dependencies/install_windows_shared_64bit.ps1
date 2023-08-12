@@ -8,4 +8,4 @@
 # this script will just extract it.
 #
 
-$PSScriptRoot/install_windows_static_64bit.ps1
+& "$PSScriptRoot/install_windows_static_64bit.ps1"
