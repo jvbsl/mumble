@@ -80,7 +80,6 @@ Write-Host "Downloading ASIO SDK..."
 
 Download -source "https://dl.mumble.info/build/extra/asio_sdk.zip" -destination "asio_sdk.zip"
 Invoke-Command 7z x "asio_sdk.zip"
-dir ./asio*
 Move-Item -Path "asiosdk_2.3.3_2019-06-14" -Destination "$SOURCE_DIR/3rdparty/asio"
 
 

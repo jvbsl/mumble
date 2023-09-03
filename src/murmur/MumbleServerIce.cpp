@@ -229,7 +229,7 @@ static void textmessageToTextmessage(const ::TextMessage &tm, ::MumbleServer::Te
 class ServerLocator : public virtual Ice::ServantLocator {
 public:
 	virtual std::shared_ptr< Ice::Object > locate(const Ice::Current &, std::shared_ptr< void > &cookie);
-	virtual void finished(const Ice::Current &, const std::shared_ptr< Ice::Object > &servant, const std::shared_ptr< void > &cookie){};
+	virtual void finished(const Ice::Current &, const std::shared_ptr< Ice::Object > &, const std::shared_ptr< void > &){};
 	virtual void deactivate(const std::string &){};
 };
 
@@ -837,7 +837,7 @@ void MumbleServerIce::setTextureSlot(int &res, int id, const QByteArray &texture
 	}
 }
 
-std::shared_ptr< Ice::Object > ServerLocator::locate(const Ice::Current &, std::shared_ptr< void > &cookie) {
+std::shared_ptr< Ice::Object > ServerLocator::locate(const Ice::Current &, std::shared_ptr< void > &) {
 	return iopServer;
 }
 
@@ -1937,13 +1937,13 @@ static void impl_Server_redirectWhisperGroup(int session, std::string source, st
 #define ACCESS_Meta_getSliceChecksums_ALL
 static void
 	impl_Meta_getSliceChecksums(std::function< void(const Ice::SliceChecksumDict &returnValue) > response,
-								std::function< void(std::exception_ptr) > exception, const Ice::ObjectAdapterPtr) {
+								std::function< void(std::exception_ptr) >, const Ice::ObjectAdapterPtr) {
 	response(::Ice::sliceChecksums());
 }
 
 #define ACCESS_Meta_getServer_READ
 static void impl_Meta_getServer(int id, std::function< void(const std::shared_ptr< ServerPrx > &returnValue) > response,
-								std::function< void(std::exception_ptr) > exception,
+								std::function< void(std::exception_ptr) >,
 								const Ice::ObjectAdapterPtr adapter) {
 	QList< int > server_list = ServerDB::getAllServers();
 	if (!server_list.contains(id))
@@ -1953,7 +1953,7 @@ static void impl_Meta_getServer(int id, std::function< void(const std::shared_pt
 }
 
 static void impl_Meta_newServer(std::function< void(const std::shared_ptr< ServerPrx > &returnValue) > response,
-								std::function< void(std::exception_ptr) > exception,
+								std::function< void(std::exception_ptr) >,
 								const Ice::ObjectAdapterPtr adapter) {
 	response(idToProxy(ServerDB::addServer(), adapter));
 }
@@ -1961,7 +1961,8 @@ static void impl_Meta_newServer(std::function< void(const std::shared_ptr< Serve
 #define ACCESS_Meta_getAllServers_READ
 static void
 	impl_Meta_getAllServers(std::function< void(const ServerList &returnValue) > response,
-							std::function< void(std::exception_ptr) > exception, const Ice::ObjectAdapterPtr adapter) {
+							std::function< void(std::exception_ptr) >,
+							const Ice::ObjectAdapterPtr adapter) {
 	::MumbleServer::ServerList sl;
 
 	foreach (int id, ServerDB::getAllServers())
@@ -1971,7 +1972,8 @@ static void
 
 #define ACCESS_Meta_getDefaultConf_READ
 static void impl_Meta_getDefaultConf(std::function< void(const ConfigMap &returnValue) > response,
-									 std::function< void(std::exception_ptr) > exception, const Ice::ObjectAdapterPtr) {
+									 std::function< void(std::exception_ptr) >,
+									 const Ice::ObjectAdapterPtr) {
 	::MumbleServer::ConfigMap cm;
 	QMap< QString, QString >::const_iterator i;
 	for (i = meta->mp.qmConfig.constBegin(); i != meta->mp.qmConfig.constEnd(); ++i) {
@@ -1985,7 +1987,8 @@ static void impl_Meta_getDefaultConf(std::function< void(const ConfigMap &return
 #define ACCESS_Meta_getBootedServers_READ
 static void
 	impl_Meta_getBootedServers(std::function< void(const ServerList &returnValue) > response,
-							   std::function< void(std::exception_ptr) > exception, const Ice::ObjectAdapterPtr adapter) {
+							   std::function< void(std::exception_ptr) >,
+							   const Ice::ObjectAdapterPtr adapter) {
 	::MumbleServer::ServerList sl;
 
 	foreach (int id, meta->qhServers.keys())
@@ -1996,7 +1999,8 @@ static void
 #define ACCESS_Meta_getVersion_ALL
 static void
 	impl_Meta_getVersion(std::function< void(int major, int minor, int patch, const std::string &text) > response,
-						 std::function< void(std::exception_ptr) > exception, const Ice::ObjectAdapterPtr) {
+						 std::function< void(std::exception_ptr) >,
+						 const Ice::ObjectAdapterPtr) {
 	Version::component_t major, minor, patch;
 	QString txt;
 	::Meta::getVersion(major, minor, patch, txt);
@@ -2030,7 +2034,8 @@ static void impl_Meta_removeCallback(std::shared_ptr< MetaCallbackPrx > cbptr, s
 
 #define ACCESS_Meta_getUptime_ALL
 static void impl_Meta_getUptime(std::function< void(int returnValue) > response,
-								std::function< void(std::exception_ptr) > exception, const Ice::ObjectAdapterPtr) {
+								std::function< void(std::exception_ptr) >,
+								const Ice::ObjectAdapterPtr) {
 	response(static_cast< int >(meta->tUptime.elapsed() / 1000000LL));
 }
 

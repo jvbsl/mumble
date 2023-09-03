@@ -212,7 +212,7 @@ def main():
             wrapperContent += generateFunction(targetClass, functionName, wrapArgs, callArgs) + "\n"
 
 
-    wrapperContent += "void ::MumbleServer::MetaI::getSliceAsync(::std::function<void(const ::std::string& returnValue)> response, ::std::function<void(::std::exception_ptr)> exception, const Ice::Current&) {\n"
+    wrapperContent += "void ::MumbleServer::MetaI::getSliceAsync(::std::function<void(const ::std::string& returnValue)> response, ::std::function<void(::std::exception_ptr)>, const Ice::Current&) {\n"
     wrapperContent += "\tresponse(std::string(\"" + iceSpec + "\"));\n"
     wrapperContent += "}\n"
 

@@ -5,7 +5,7 @@
 
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
-	REPO jvbsl/ice
+	REPO mumble-voip/ice
 	REF 3.7
 	SHA512 614b6a0041a5c0570a4056e1fa213e9f536534875c72c0f736d75d4ce53a84e68112009496bf4c1b8fddc98100ded15d1857a79b1e77bcd61ac947eacecb673d
 )
