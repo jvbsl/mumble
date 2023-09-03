@@ -991,7 +991,7 @@ static void impl_Server_getConf(std::string key, std::function< void(const std::
 }
 
 #define ACCESS_Server_getAllConf_READ
-static void impl_Server_getAllConf(std::function< void(const ConfigMap &returnValue) > response,
+static void impl_Server_getAllConf(std::function< void(const ::MumbleServer::ConfigMap &returnValue) > response,
 								   std::function< void(std::exception_ptr) > exception, int server_id) {
 	NEED_SERVER_EXISTS;
 
@@ -1971,7 +1971,7 @@ static void
 }
 
 #define ACCESS_Meta_getDefaultConf_READ
-static void impl_Meta_getDefaultConf(std::function< void(const ConfigMap &returnValue) > response,
+static void impl_Meta_getDefaultConf(std::function< void(const ::MumbleServer::ConfigMap &returnValue) > response,
 									 std::function< void(std::exception_ptr) >,
 									 const Ice::ObjectAdapterPtr) {
 	::MumbleServer::ConfigMap cm;
