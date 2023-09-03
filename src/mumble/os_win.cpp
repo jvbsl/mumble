@@ -22,6 +22,8 @@
 #include <wincrypt.h>
 
 #ifdef _MSC_VER
+
+#	pragma comment(lib, "Crypt32.lib")
 #	include <delayimp.h>
 #endif
 

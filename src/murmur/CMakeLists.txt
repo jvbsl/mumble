@@ -133,6 +133,7 @@ if(WIN32)
 			dbghelp.lib
 			shlwapi.lib
 			rpcrt4.lib
+			Ws2_32.lib
 	)
 
 	if(static AND TARGET Qt5::QWindowsIntegrationPlugin)
@@ -199,14 +200,15 @@ endif()
 if(ice)
 	find_pkg(Ice
 		COMPONENTS
-			Ice
-			IceSSL
+			Ice++11
+			IceSSL++11
 		OPTIONAL_COMPONENTS
-			IceDiscovery
-			IceLocatorDiscovery
-			IceUtil
+			IceDiscovery++11
+			IceLocatorDiscovery++11
 		REQUIRED
 	)
+	
+	message(WARNING "some value: ${IceDiscovery++11}")
 
 	if(Ice_VERSION_MAJOR LESS 3)
 		message(FATAL_ERROR "Unsupported Ice version, at least 3.0 is required.")
@@ -260,20 +262,25 @@ if(ice)
 	target_compile_definitions(mumble-server
 		PRIVATE
 			"USE_ICE"
+		    "ICE_CPP11_MAPPING"
+	)
+	
+	if(static)
+		target_compile_definitions(mumble-server
+		PRIVATE
 			"ICE_STATIC_LIBS"
 	)
+	endif()
 
 	target_include_directories(mumble-server PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 
 	target_link_libraries(mumble-server
 		PRIVATE
-			Ice::Ice
-			Ice::IceSSL
-			$<TARGET_NAME_IF_EXISTS:Ice::IceDiscovery>
-			$<TARGET_NAME_IF_EXISTS:Ice::IceLocatorDiscovery>
-			$<TARGET_NAME_IF_EXISTS:Ice::IceUtil>
+			Ice::Ice++11
+			Ice::IceSSL++11
+			$<TARGET_NAME_IF_EXISTS:Ice::IceDiscovery++11>
+			$<TARGET_NAME_IF_EXISTS:Ice::IceLocatorDiscovery++11>
 	)
-	
 	file(COPY "${ICE_FILE}" DESTINATION ${CMAKE_BINARY_DIR})
 endif()
 

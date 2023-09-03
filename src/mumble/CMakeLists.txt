@@ -626,6 +626,7 @@ if(WIN32)
 			dxguid.lib
 			hid.lib
 			wintrust.lib
+			ws2_32.lib
 	)
 else()
 	target_sources(mumble_client_object_lib PRIVATE "SharedMemory_unix.cpp")
@@ -957,6 +958,9 @@ if(zeroconf)
 
 	target_compile_definitions(mumble_client_object_lib PUBLIC "USE_ZEROCONF")
 	target_include_directories(mumble_client_object_lib PUBLIC "${3RDPARTY_DIR}/qqbonjour")
+	if (WIN32)
+		target_link_libraries(mumble_client_object_lib PUBLIC "dnsapi")
+	endif()
 endif()
 
 if(alsa)

@@ -36,14 +36,14 @@ protected:
 	QMutex qmEvent;
 	QWaitCondition qwcEvent;
 	void customEvent(QEvent *evt);
-	void badMetaProxy(const ::MumbleServer::MetaCallbackPrx &prx);
-	void badServerProxy(const ::MumbleServer::ServerCallbackPrx &prx, const ::Server *server);
+	void badMetaProxy(const ::MumbleServer::MetaCallbackPrxPtr &prx);
+	void badServerProxy(const ::MumbleServer::ServerCallbackPrxPtr &prx, const ::Server *server);
 	void badAuthenticator(::Server *);
-	QList<::MumbleServer::MetaCallbackPrx > qlMetaCallbacks;
-	QMap< int, QList<::MumbleServer::ServerCallbackPrx > > qmServerCallbacks;
-	QMap< int, QMap< int, QMap< QString, ::MumbleServer::ServerContextCallbackPrx > > > qmServerContextCallbacks;
-	QMap< int, ::MumbleServer::ServerAuthenticatorPrx > qmServerAuthenticator;
-	QMap< int, ::MumbleServer::ServerUpdatingAuthenticatorPrx > qmServerUpdatingAuthenticator;
+	QList<::MumbleServer::MetaCallbackPrxPtr > qlMetaCallbacks;
+	QMap< int, QList<::MumbleServer::ServerCallbackPrxPtr > > qmServerCallbacks;
+	QMap< int, QMap< int, QMap< QString, ::MumbleServer::ServerContextCallbackPrxPtr > > > qmServerContextCallbacks;
+	QMap< int, ::MumbleServer::ServerAuthenticatorPrxPtr > qmServerAuthenticator;
+	QMap< int, ::MumbleServer::ServerUpdatingAuthenticatorPrxPtr > qmServerUpdatingAuthenticator;
 
 public:
 	Ice::CommunicatorPtr communicator;
@@ -51,22 +51,22 @@ public:
 	MumbleServerIce();
 	~MumbleServerIce();
 
-	void addMetaCallback(const ::MumbleServer::MetaCallbackPrx &prx);
-	void removeMetaCallback(const ::MumbleServer::MetaCallbackPrx &prx);
-	void addServerCallback(const ::Server *server, const ::MumbleServer::ServerCallbackPrx &prx);
-	void removeServerCallback(const ::Server *server, const ::MumbleServer::ServerCallbackPrx &prx);
+	void addMetaCallback(const ::MumbleServer::MetaCallbackPrxPtr &prx);
+	void removeMetaCallback(const ::MumbleServer::MetaCallbackPrxPtr &prx);
+	void addServerCallback(const ::Server *server, const ::MumbleServer::ServerCallbackPrxPtr &prx);
+	void removeServerCallback(const ::Server *server, const ::MumbleServer::ServerCallbackPrxPtr &prx);
 	void removeServerCallbacks(const ::Server *server);
 	void addServerContextCallback(const ::Server *server, int session_id, const QString &action,
-								  const ::MumbleServer::ServerContextCallbackPrx &prx);
-	const QMap< int, QMap< QString, ::MumbleServer::ServerContextCallbackPrx > >
+								  const ::MumbleServer::ServerContextCallbackPrxPtr &prx);
+	const QMap< int, QMap< QString, ::MumbleServer::ServerContextCallbackPrxPtr > >
 		getServerContextCallbacks(const ::Server *server) const;
 	void removeServerContextCallback(const ::Server *server, int session_id, const QString &action);
-	void setServerAuthenticator(const ::Server *server, const ::MumbleServer::ServerAuthenticatorPrx &prx);
-	const ::MumbleServer::ServerAuthenticatorPrx getServerAuthenticator(const ::Server *server) const;
+	void setServerAuthenticator(const ::Server *server, const ::MumbleServer::ServerAuthenticatorPrxPtr &prx);
+	const ::MumbleServer::ServerAuthenticatorPrxPtr getServerAuthenticator(const ::Server *server) const;
 	void removeServerAuthenticator(const ::Server *server);
 	void setServerUpdatingAuthenticator(const ::Server *server,
-										const ::MumbleServer::ServerUpdatingAuthenticatorPrx &prx);
-	const ::MumbleServer::ServerUpdatingAuthenticatorPrx getServerUpdatingAuthenticator(const ::Server *server) const;
+										const ::MumbleServer::ServerUpdatingAuthenticatorPrxPtr &prx);
+	const ::MumbleServer::ServerUpdatingAuthenticatorPrxPtr getServerUpdatingAuthenticator(const ::Server *server) const;
 	void removeServerUpdatingAuthenticator(const ::Server *server);
 
 public slots:

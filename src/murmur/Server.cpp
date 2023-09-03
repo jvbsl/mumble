@@ -46,6 +46,7 @@
 #include <vector>
 
 #ifdef Q_OS_WIN
+#	pragma comment(lib, "Ws2_32.lib")
 #	include <qos2.h>
 #	include <ws2tcpip.h>
 #else

@@ -6,13 +6,12 @@
 $profiledir = $Env:USERPROFILE 
 $vcpkgdir = $profiledir + "\vcpkg"
 
-$mumble_deps = "qt5-base[mysqlplugin]",
-               "qt5-base[postgresqlplugin]",
+$mumble_deps = "qt5-base[postgresqlplugin,mysqlplugin]",
                "qt5-svg",
                "qt5-tools",
                "qt5-translations",
                "boost-accumulators",
-               "opus"
+               "opus",
                "poco",
                "libvorbis",
                "libogg",
@@ -34,9 +33,9 @@ function vcpkg_install {
 	)
 	
 	if ($cleanAfterBuild) {
-		./vcpkg.exe install $packages --triplet $targetTriplet --clean-after-build
+		./vcpkg.exe install $packages --triplet $targetTriplet --clean-after-build --recurse
 	} else {
-		./vcpkg.exe install $packages --triplet $targetTriplet
+		./vcpkg.exe install $packages --triplet $targetTriplet --recurse
 	}
 	
 	if (-not $?) {
@@ -49,10 +48,10 @@ $prevDir=pwd
 try {
 	Write-Host "Setting triplets for $Env:PROCESSOR_ARCHITECTURE"
 	if ($Env:PROCESSOR_ARCHITECTURE -eq "AMD64") {
-		$triplet = "x64-windows-static-md"
-		$xcompile_triplet = "x86-windows-static-md"
+		$triplet = "x64-windows"
+		$xcompile_triplet = "x86-windows"
 	} else {
-		$triplet = "x86-windows-static-md"
+		$triplet = "x86-windows"
 	}
 
 	Write-Host "Checking for $vcpkgdir..."
