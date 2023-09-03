@@ -65,7 +65,7 @@ mumble_deps=("qt5-base[mysqlplugin,postgresqlplugin]"
             "libsndfile"
             "protobuf"
             "zlib"
-            "zeroc-ice-mumble")
+            "zeroc-ice")
 
 # Determine vcpkg triplet from OS https://github.com/Microsoft/vcpkg/blob/master/docs/users/triplets.md
 # Available triplets can be printed with `vcpkg help triplet`

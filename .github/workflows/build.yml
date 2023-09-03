@@ -7,7 +7,7 @@ env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
   CMAKE_OPTIONS: -Dtests=ON -Dsymbols=ON -Ddisplay-install-paths=ON
-  VCPKG_COMMIT_ID: a28aae61c575c6b5b2318d3d2dd97de1e55dc049
+  VCPKG_COMMIT_ID: 51b3835d9333008974403af219377e253aa927d4
 
 
 jobs:
@@ -83,6 +83,7 @@ jobs:
       uses: lukka/run-vcpkg@v11
       id: runvcpkg
       with:
+        vcpkgGitURL: "https://github.com/jvbsl/vcpkg"
         vcpkgDirectory: ${{ env.VCPKG_ROOT }}
         vcpkgGitCommitId: '${{ env.VCPKG_COMMIT_ID }}'
       if: matrix.os == 'windows-latest' || matrix.os == 'macos-latest' || matrix.type == 'static'

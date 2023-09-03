@@ -30,7 +30,7 @@ $mumble_deps = "qt5-base[mysqlplugin,postgresqlplugin]",
                "mdnsresponder",
                "protobuf",
                "zlib", 
-               "zeroc-ice-mumble"
+               "zeroc-ice"
 
 $ErrorActionPreference = 'Stop'
 
