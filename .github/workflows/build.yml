@@ -7,7 +7,7 @@ env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
   CMAKE_OPTIONS: -Dtests=ON -Dsymbols=ON -Ddisplay-install-paths=ON
-  VCPKG_COMMIT_ID: 37e936688d79903e13061b379b4cbb7e79ef3344
+  VCPKG_COMMIT_ID: 646d3c30c20c2564f7e29d262969d84c383be60d
 
 
 jobs:
