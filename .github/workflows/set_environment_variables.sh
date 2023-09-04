@@ -31,7 +31,7 @@ case "$os" in
 	"ubuntu")
 		;;
 	"windows")
-		VCPKG_CMAKE_OPTIONS="-DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl"
+		VCPKG_CMAKE_OPTIONS="$VCPKG_CMAKE_OPTIONS -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl"
 		;;
 	"macos")
 		;;
@@ -84,7 +84,7 @@ else
 fi
 
 if [[ "$os" != "ubuntu" || "$build_type" == "static" ]]; then
-	VCPKG_CMAKE_OPTIONS="$VCPKG_CMAKE_OPTIONS -DCMAKE_TOOLCHAIN_FILE='$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake' -DVCPKG_TARGET_TRIPLET='$VCPKG_TARGET_TRIPLET' -DIce_HOME='$VCPKG_ROOT/installed/$VCPKG_TARGET_TRIPLET'"
+	VCPKG_CMAKE_OPTIONS="$VCPKG_CMAKE_OPTIONS -DCMAKE_TOOLCHAIN_FILE='$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake' -DVCPKG_TARGET_TRIPLET='$VCPKG_TARGET_TRIPLET' -DIce_HOME='$VCPKG_ROOT/installed/$VCPKG_TARGET_TRIPLET' -DIce_SLICE_DIR='$VCPKG_ROOT/installed/$VCPKG_TARGET_TRIPLET/share/ice/slice'"
 fi
 
 
